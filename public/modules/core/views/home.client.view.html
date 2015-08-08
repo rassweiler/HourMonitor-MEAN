@@ -1,0 +1,45 @@
+<section data-ng-controller="HomeController">
+	<div class="jumbotron text-center">
+		<div class="row">
+			<div class="col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3 col-xs-12">
+				<img alt="MEAN.JS" class="img-responsive text-center" src="modules/core/img/brand/logo.png" />
+			</div>
+		</div>
+		<br>
+		<div class="row">
+			<p class="lead">
+				Hour Tracking Assistant
+			</p>
+		</div>
+	</div>
+	<div class="row text-center">
+		<div class="col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3 col-xs-12">
+			<div>
+				<h2>Getting Started</h2>
+			</div>
+			<div class="row" data-ng-hide="authentication.user">
+				<p class="lead">
+					Please <a href="/#!/signin">Sign-in</a> or <a href="/#!/signup">Sign-up</a>.
+				</p>
+			</div>
+			<div class="row" data-ng-show="authentication.user">
+				<p>
+					Each place that pays you should be created as a seperate job. Each job will generate pay files based on chosen settings. Think of the pay files as "Paychecks".
+				</p>
+			</div>
+		</div>
+	</div>
+	<div class="row" data-ng-show="authentication.user">
+		<div class="col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3 col-xs-12">
+			<div class="text-center">
+				<h2>Stepping Through:</h2>
+			</div>
+			<div class="row">
+				<ul>
+					<li>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</section>
