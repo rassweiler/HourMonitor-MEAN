@@ -4,76 +4,52 @@
  * Module dependencies.
  */
 var should = require('should'),
-    mongoose = require('mongoose'),
-    Job = mongoose.model('Job');
+	mongoose = require('mongoose'),
+	User = mongoose.model('User'),
+	Job = mongoose.model('Job');
+
+/**
+ * Globals
+ */
+var user, job;
 
 /**
  * Unit tests
  */
-describe('Job Model', function() {
+describe('Job Model Unit Tests:', function() {
+	beforeEach(function(done) {
+		user = new User({
+			firstName: 'Full',
+			lastName: 'Name',
+			displayName: 'Full Name',
+			email: 'test@test.com',
+			username: 'username',
+			password: 'password'
+		});
 
-    describe('Saving', function() {
-        it('saves new record', function(done) {
-            var job = new Job({
-                name: 'Beverages',
-                description: 'Soft drinks, coffees, teas, beers, and ales'
-            });
+		user.save(function() { 
+			job = new Job({
+				// Add model fields
+				// ...
+			});
 
-            job.save(function(err, saved) {
-                should.not.exist(err);
-                done();
-            });
-        });
+			done();
+		});
+	});
 
-        it('throws validation error when name is empty', function(done) {   
-            var job = new Job({
-                description: 'Soft drinks, coffees, teas, beers, and ales'
-            });
+	describe('Method Save', function() {
+		it('should be able to save without problems', function(done) {
+			return job.save(function(err) {
+				should.not.exist(err);
+				done();
+			});
+		});
+	});
 
-            job.save(function(err) {
-                should.exist(err);
-                err.errors.name.message.should.equal('name cannot be blank');
-                done();
-            });
-        });
+	afterEach(function(done) { 
+		Job.remove().exec();
+		User.remove().exec();
 
-        it('throws validation error when name longer than 20 chars', function(done) {
-            var job = new Job({
-                name: 'Grains/Cereals/Chocolates/BananaHammock Apple Sitck'
-            });
-
-            job.save(function(err, saved) {
-                should.exist(err);
-                err.errors.name.message.should.equal('name must be 20 chars in length or less');
-                done();
-            });
-        });
-
-        it('throws validation error for duplicate job name', function(done) {
-            var job = new Job({
-                name: 'Beverages'
-            });
-
-            job.save(function(err) {
-                should.not.exist(err);
-
-                var duplicate = new Job({
-                    name: 'Beverages'
-                });
-
-                duplicate.save(function(err) {
-                    err.err.indexOf('$name').should.not.equal(-1);
-                    err.err.indexOf('duplicate key error').should.not.equal(-1);
-                    should.exist(err);
-                    done();
-                });
-            });
-        });
-    });
-
-    afterEach(function(done) { 
-        // NB this deletes ALL categories (but is run against a test database)
-        Job.remove().exec();
-        done();
-    });
+		done();
+	});
 });

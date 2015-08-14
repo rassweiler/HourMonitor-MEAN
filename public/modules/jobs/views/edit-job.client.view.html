@@ -1,28 +1,40 @@
-<section data-ng-controller="CategoriesController" data-ng-init="findOne()">
+<section data-ng-controller="JobsController" data-ng-init="findOne()">
     <div class="page-header">
-        <h1>Edit Category</h1>
+        <h1>Update Job</h1>
     </div>
     <div class="col-md-12">
         <form class="form-horizontal" data-ng-submit="update()" novalidate>
             <fieldset>
                 <div class="form-group">
-                    <label class="control-label" for="name">Name</label>
+                    <label class="control-label" for="name">Description</label>
                     <div class="controls">
-                        <input type="text" data-ng-model="category.name" id="name" class="form-control" placeholder="Name" required>
+                        <textarea name="description" data-ng-model="job.description" id="description" class="form-control" cols="30" rows="10" placeholder="Description"></textarea>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label" for="description">Description</label>
+                    <label class="control-label" for="title">Job Title</label>
                     <div class="controls">
-                        <textarea name="description" data-ng-model="category.description" id="description" class="form-control" cols="30" rows="10" placeholder="Description" required></textarea>
+                        <input type="text" data-ng-model="job.title" id="title" class="form-control" placeholder="Job Title">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="company">Company Name</label>
+                    <div class="controls">
+                        <input type="text" data-ng-model="job.company" id="company" class="form-control" placeholder="Company Name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="rate">Pay Rate</label>
+                    <div class="controls">
+                        <input type="number" data-ng-model="job.rate" id="rate" class="form-control" placeholder="Pay Rate" required>
                     </div>
                 </div>
                 <div class="form-group">
                     <input type="submit" value="Update" class="btn btn-default">
                 </div>
-				<div data-ng-show="error" class="text-danger">
-					<strong data-ng-bind="error"></strong>
-				</div>
+                <div data-ng-show="error" class="text-danger">
+                    <strong data-ng-bind="error"></strong>
+                </div>
             </fieldset>
         </form>
     </div>

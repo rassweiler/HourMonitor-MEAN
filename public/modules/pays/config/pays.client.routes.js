@@ -3,11 +3,11 @@
 //Setting up route
 angular.module('pays').config(['$stateProvider',
 	function($stateProvider) {
-		// Categories state routing
+		// Pays state routing
 		$stateProvider.
 		state('listPays', {
 			url: '/pays',
-			templateUrl: 'modules/pays/views/pays.client.view.html'
+			templateUrl: 'modules/pays/views/list-pays.client.view.html'
 		}).
 		state('createPay', {
 			url: '/pays/create',

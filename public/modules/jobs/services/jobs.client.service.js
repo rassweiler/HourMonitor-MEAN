@@ -1,9 +1,9 @@
 'use strict';
 
-//Jobs service used to communicate Jobs REST endpoints
+//Categories service used to communicate Categories REST endpoints
 angular.module('jobs').factory('Jobs', ['$resource',
     function($resource) {
-        return $resource('jobs/:jobId', { categoryId: '@_id'
+        return $resource('jobs/:jobId', { jobId: '@_id'
         }, {
             update: {
                 method: 'PUT'

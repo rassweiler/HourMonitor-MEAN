@@ -5,7 +5,7 @@ angular.module('jobs').config(['$stateProvider',
 	function($stateProvider) {
 		// Categories state routing
 		$stateProvider.
-		state('listJobs', {
+		state('listCategories', {
 			url: '/jobs',
 			templateUrl: 'modules/jobs/views/jobs.client.view.html'
 		}).
