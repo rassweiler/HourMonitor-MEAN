@@ -1,17 +1,23 @@
-[![MEAN.JS Logo](http://kylerassweiler.com/static/img/HourMonitorLogo-small.png)](http://hourmonitor.azurewebsites.net)
+[![HourMonitor Logo](http://kylerassweiler.com/media/img/HourMonitor/logo.png)](http://hourmonitor.azurewebsites.net)
 
 [![Build Status](https://travis-ci.org/rassweiler/HourMonitor-MEAN.svg?branch=master)](https://travis-ci.org/rassweiler/HourMonitor-MEAN)
 
-HourMonitor is a simple web application for tracking hours worked, designed to be mobile friendly and multiplatform.
+HourMonitor is a simple web application for tracking hours worked, designed to be mobile friendly and multiplatform. [Try it out!](http://hourmonitor.azurewebsites.net/#!/)
 
 ## Prerequisites
 Make sure you have installed all these prerequisites on your development machine.
-* Node.js - [Download & Install Node.js](http://www.nodejs.org/download/) and the npm package manager, if you encounter any problems, you can also use this [GitHub Gist](https://gist.github.com/isaacs/579814) to install Node.js.
+* Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager, if you encounter any problems, you can also use this [GitHub Gist](https://gist.github.com/isaacs/579814) to install Node.js.
 * MongoDB - [Download & Install MongoDB](http://www.mongodb.org/downloads), and make sure it's running on the default port (27017).
 * Bower - You're going to use the [Bower Package Manager](http://bower.io/) to manage your front-end packages, in order to install it make sure you've installed Node.js and npm, then install bower globally using npm:
 
 ```
 $ npm install -g bower
+```
+
+* Yeoman - Install the generator with npm:
+
+```
+$ npm install -g yo
 ```
 
 * Grunt - You're going to use the [Grunt Task Runner](http://gruntjs.com/) to automate your development process, in order to install it make sure you've installed Node.js and npm, then install grunt globally using npm:
@@ -20,36 +26,35 @@ $ npm install -g bower
 $ sudo npm install -g grunt-cli
 ```
 
-## Downloading MEAN.JS
-There are several ways you can get the MEAN.JS boilerplate: 
-
-### Yo Generator 
-The recommended way would be to use the [Official Yo Generator](http://meanjs.org/generator.html) which will generate the latest stable copy of the MEAN.JS boilerplate and supplies multiple sub-generators to ease your daily development cycles.
-
-### Cloning The GitHub Repository
-You can also use Git to directly clone the MEAN.JS repository:
-```
-$ git clone https://github.com/meanjs/mean.git meanjs
-```
-This will clone the latest version of the MEAN.JS repository to a **meanjs** folder.
-
-### Downloading The Repository Zip File
-Another way to use the MEAN.JS boilerplate is to download a zip copy from the [master branch on GitHub](https://github.com/meanjs/mean/archive/master.zip). You can also do this using `wget` command:
-```
-$ wget https://github.com/meanjs/mean/archive/master.zip -O meanjs.zip; unzip meanjs.zip; rm meanjs.zip
-```
-Don't forget to rename **mean-master** after your project name.
+*Python - [Download & Install](https://www.python.org/downloads/)
+*GIT - [Download & Install](https://git-scm.com/downloads)
 
 ## Quick Install
 
-The first thing you should do is install the Node.js dependencies. The boilerplate comes pre-bundled with a package.json file that contains the list of modules you need to start your application, to learn more about the modules installed visit the NPM & Package.json section.
-
-To install Node.js dependencies you're going to use npm again, in the application folder run this in the command-line:
-
+###Windows
+- Install python 2.7 (not 3) and select to add to path
+- Install git
+- Install Node.js
+- Install MongoDB (also add path to env var e.g. C:\Program Files\MongoDB\Server\3.0\bin to make starting it easier)
+- Create dirs C:\data\db\
+- clone this repo
+- Open new powershell(now called ps2) and cd to repo dir
+- Enter in ps2:
+```
+npm install -g bower
+```
+- Enter in ps2:
+```
+$ npm install -g grunt-cli
+```
+-Enter in ps2:
+```
+$ npm install -g generator-meanjs
+```
+- Install the rest of the projects dependencies. enter in ps2:
 ```
 $ npm install
 ```
-
 This command does a few things:
 * First it will install the dependencies needed for the application to run.
 * If you're running in a development environment, it will then also install development dependencies needed for testing and running your application.
@@ -63,15 +68,21 @@ $ grunt
 ```
 
 Your application should run on the 3000 port so in your browser just go to [http://localhost:3000](http://localhost:3000)
+
+You also need mongodb running in a seperate shell:
+
+```
+$ mongod
+```
+Your db should run on the 27017 port so in your browser just go to [http://localhost:27017](http://localhost:27017)
+
                             
 That's it! your application should be running by now, to proceed with your development check the other sections in this documentation. 
 If you encounter any problem try the Troubleshooting section.
 
 ## Credits
-- HourMonitor
-By Kyle Rassweiler
-- MEAN
-Inspired by the great work of [Madhusudhan Srinivasa](https://github.com/madhums/)
+- HourMonitor - Created by [Kyle Rassweiler](http://www.kylerassweiler.com)
+- MEAN - Inspired by the great work of [Madhusudhan Srinivasa](https://github.com/madhums/)
 The MEAN name was coined by [Valeri Karpov](http://blog.mongodb.org/post/49262866911/the-mean-stack-mongodb-expressjs-angularjs-and)
 
 ## License

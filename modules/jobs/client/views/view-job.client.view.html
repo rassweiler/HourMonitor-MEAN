@@ -1,0 +1,38 @@
+<section ng-controller="JobsController" ng-init="findOne()">
+  <div class="page-header">
+    <h1 ng-bind="job.title"></h1>
+    <small>
+      <em class="text-muted">
+        Created:
+        <span ng-bind="job.created | date:'mediumDate'"></span>
+      </em>
+    </small>
+  </div>
+  <div class="pull-right" ng-show="authentication.user._id == job.user._id">
+    <a class="btn btn-primary" ui-sref="jobs.edit({jobId: job._id})">
+      <i class="glyphicon glyphicon-edit"></i>
+    </a>
+    <a class="btn btn-primary" ng-click="remove();">
+      <i class="glyphicon glyphicon-trash"></i>
+    </a>
+  </div>
+  <p ng-bind="job.description"></p>
+  <p class="lead">
+    Current Rate:
+    <span data-ng-bind="job.rate"></span>
+  </p>
+  <p class="lead">
+    Paycheck Period: 
+    <span data-ng-bind="job.period"></span>
+  </p>
+  <p class="lead">
+    Clocked In: 
+    <span data-ng-bind="job.clocked"></span>
+  </p>
+  <ul class="list-group">
+    <h3>All Pay Files:</h3>
+    <li data-ng-repeat="f in job.payfiles" data-ng-href="/#!/pays/{{f}}" class="list-group-item">
+        <a href="/#!/pays/{{f}}">{{f}}</a>
+    </li>
+  </ul>
+</section>

@@ -1,0 +1,20 @@
+<section ng-controller="PaysController" ng-init="findOne()">
+  <div class="page-header">
+    <h1>{{pay.start| date:'mediumDate'}} - {{pay.end| date:'mediumDate'}}</h1>
+  </div>
+  <div class="pull-right" ng-show="authentication.user._id == pay.user._id">
+    <a class="btn btn-primary" ng-click="remove();">
+      <i class="glyphicon glyphicon-trash"></i>
+    </a>
+  </div>
+  <small>
+    <em class="text-muted">
+      Created:
+      <span ng-bind="pay.created | date:'mediumDate'"></span>
+    </em>
+  </small>
+  <p data-ng-bind="pay.title"></p>
+  <br />
+  <h3>Job</h3>
+  <a href="jobs/{{ pay.job }}" data-ng-bind="pay.job"></a>
+</section>
