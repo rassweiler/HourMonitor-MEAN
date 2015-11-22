@@ -18,7 +18,6 @@ var JobSchema = new Schema({
     type: String,
     default: '',
     trim: true,
-    unique: true,
     required: 'Title cannot be blank'
   },
   description: {
@@ -31,7 +30,7 @@ var JobSchema = new Schema({
     default: '',
     trim: true,     
     // make this a required field
-    required: 'company cannot be blank'
+    required: 'Company cannot be blank'
   },
   pay: {
     type: String,
@@ -39,11 +38,11 @@ var JobSchema = new Schema({
   },
   rate: {
     type: Number,
-    required: 'rate cannot be blank'
+    required: 'Rate cannot be blank'
   },
   period: {
     type: Number,
-    required: 'frequency cannot be blank'
+    required: 'Period cannot be blank'
   },
   clocked: {
     type: Boolean,
@@ -51,7 +50,19 @@ var JobSchema = new Schema({
   },
   paydate:{
     type: Date,
-    required: 'First pay day cannot be blank'
+    required: 'Paydate cannot be blank',
+    validate: {
+      validator: function(v) {
+        var date = new Date();
+        date.setHours(0,0,0,0);
+        if(v>= date){
+          return true;
+        }else{
+          return false;
+        }
+      },
+      message: 'Next pay date must be after the current date'
+    }
   },
   payfiles:[{ 
     type: Schema.ObjectId,

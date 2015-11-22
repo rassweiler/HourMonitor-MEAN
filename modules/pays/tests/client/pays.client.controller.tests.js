@@ -52,8 +52,9 @@
       // create mock pay
       mockPay = new Pays({
         _id: '525a8422f6d0f87f0e407a33',
-        title: 'An Pay about MEAN',
-        content: 'MEAN rocks!'
+        title: 'Pay Title',
+        start: Date.now(),
+        end: Date.now(),
       });
 
       // Mock logged in user
@@ -103,13 +104,11 @@
       beforeEach(function () {
         // Create a sample pay object
         samplePayPostData = new Pays({
-          title: 'An Pay about MEAN',
-          content: 'MEAN rocks!'
+          title: 'An Pay about MEAN'
         });
 
         // Fixture mock form input values
         scope.title = 'An Pay about MEAN';
-        scope.content = 'MEAN rocks!';
 
         spyOn($location, 'path');
       });
@@ -124,7 +123,6 @@
 
         // Test form inputs are reset
         expect(scope.title).toEqual('');
-        expect(scope.content).toEqual('');
 
         // Test URL redirection after the pay was created
         expect($location.path.calls.mostRecent().args[0]).toBe('pays/' + mockPay._id);

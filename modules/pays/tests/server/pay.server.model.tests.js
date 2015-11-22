@@ -31,7 +31,8 @@ describe('Pay Model Unit Tests:', function () {
     user.save(function () {
       pay = new Pay({
         title: 'Pay Title',
-        content: 'Pay Content',
+        start: Date.now(),
+        end: Date.now(),
         user: user
       });
 
@@ -48,8 +49,26 @@ describe('Pay Model Unit Tests:', function () {
       });
     });
 
-    it('should be able to show an error when try to save without title', function (done) {
+    it('should be able to show an error when trying to save without title', function (done) {
       pay.title = '';
+
+      return pay.save(function (err) {
+        should.exist(err);
+        done();
+      });
+    });
+
+    it('should be able to show an error when trying to save without start date', function (done) {
+      pay.start = null;
+
+      return pay.save(function (err) {
+        should.exist(err);
+        done();
+      });
+    });
+
+    it('should be able to show an error when trying to save without end date', function (done) {
+      pay.end = null;
 
       return pay.save(function (err) {
         should.exist(err);

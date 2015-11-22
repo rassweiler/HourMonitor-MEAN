@@ -32,6 +32,12 @@ var PaySchema = new Schema({
     type: Date,
     required: 'Please assign a end'
   },
+  punchin:[{
+    type: Date
+  }],
+  punchout:[{
+    type: Date
+  }],
   user: {
     type: Schema.ObjectId,
     ref: 'User'

@@ -144,6 +144,157 @@ describe('Job CRUD tests', function () {
       });
   });
 
+  it('should not be able to save an job if no company is provided', function (done) {
+    // Invalidate title field
+    job.company = '';
+
+    agent.post('/api/auth/signin')
+      .send(credentials)
+      .expect(200)
+      .end(function (signinErr, signinRes) {
+        // Handle signin error
+        if (signinErr) {
+          return done(signinErr);
+        }
+
+        // Get the userId
+        var userId = user.id;
+
+        // Save a new job
+        agent.post('/api/jobs')
+          .send(job)
+          .expect(400)
+          .end(function (jobSaveErr, jobSaveRes) {
+            // Set message assertion
+            (jobSaveRes.body.message).should.match('Company cannot be blank');
+
+            // Handle job save error
+            done(jobSaveErr);
+          });
+      });
+  });
+
+  it('should not be able to save an job if no rate is provided', function (done) {
+    // Invalidate title field
+    job.rate = null;
+
+    agent.post('/api/auth/signin')
+      .send(credentials)
+      .expect(200)
+      .end(function (signinErr, signinRes) {
+        // Handle signin error
+        if (signinErr) {
+          return done(signinErr);
+        }
+
+        // Get the userId
+        var userId = user.id;
+
+        // Save a new job
+        agent.post('/api/jobs')
+          .send(job)
+          .expect(400)
+          .end(function (jobSaveErr, jobSaveRes) {
+            // Set message assertion
+            (jobSaveRes.body.message).should.match('Rate cannot be blank');
+
+            // Handle job save error
+            done(jobSaveErr);
+          });
+      });
+  });
+
+  it('should not be able to save an job if no period is provided', function (done) {
+    // Invalidate title field
+    job.period = null;
+
+    agent.post('/api/auth/signin')
+      .send(credentials)
+      .expect(200)
+      .end(function (signinErr, signinRes) {
+        // Handle signin error
+        if (signinErr) {
+          return done(signinErr);
+        }
+
+        // Get the userId
+        var userId = user.id;
+
+        // Save a new job
+        agent.post('/api/jobs')
+          .send(job)
+          .expect(400)
+          .end(function (jobSaveErr, jobSaveRes) {
+            // Set message assertion
+            (jobSaveRes.body.message).should.match('Period cannot be blank');
+
+            // Handle job save error
+            done(jobSaveErr);
+          });
+      });
+  });
+
+  it('should not be able to save an job if no paydate is provided', function (done) {
+    // Invalidate title field
+    job.paydate = null;
+
+    agent.post('/api/auth/signin')
+      .send(credentials)
+      .expect(200)
+      .end(function (signinErr, signinRes) {
+        // Handle signin error
+        if (signinErr) {
+          return done(signinErr);
+        }
+
+        // Get the userId
+        var userId = user.id;
+
+        // Save a new job
+        agent.post('/api/jobs')
+          .send(job)
+          .expect(400)
+          .end(function (jobSaveErr, jobSaveRes) {
+            // Set message assertion
+            (jobSaveRes.body.message).should.match('Paydate cannot be blank');
+
+            // Handle job save error
+            done(jobSaveErr);
+          });
+      });
+  });
+
+  it('should not be able to save an job if paydate is less than current date', function (done) {
+    // Invalidate title field
+    var date = new Date(new Date().setDate(new Date().getDate()-2));
+    job.paydate = date;
+
+    agent.post('/api/auth/signin')
+      .send(credentials)
+      .expect(200)
+      .end(function (signinErr, signinRes) {
+        // Handle signin error
+        if (signinErr) {
+          return done(signinErr);
+        }
+
+        // Get the userId
+        var userId = user.id;
+
+        // Save a new job
+        agent.post('/api/jobs')
+          .send(job)
+          .expect(400)
+          .end(function (jobSaveErr, jobSaveRes) {
+            // Set message assertion
+            (jobSaveRes.body.message).should.match('Next pay date must be after the current date');
+
+            // Handle job save error
+            done(jobSaveErr);
+          });
+      });
+  });
+
   it('should be able to update an job if signed in', function (done) {
     agent.post('/api/auth/signin')
       .send(credentials)
@@ -168,7 +319,7 @@ describe('Job CRUD tests', function () {
             }
 
             // Update job title
-            job.title = 'WHY YOU GOTTA BE SO MEAN?';
+            job.description = 'WHY YOU GOTTA BE SO MEAN?';
 
             // Update an existing job
             agent.put('/api/jobs/' + jobSaveRes.body._id)
@@ -182,7 +333,7 @@ describe('Job CRUD tests', function () {
 
                 // Set assertions
                 (jobUpdateRes.body._id).should.equal(jobSaveRes.body._id);
-                (jobUpdateRes.body.title).should.match('WHY YOU GOTTA BE SO MEAN?');
+                (jobUpdateRes.body.description).should.match('WHY YOU GOTTA BE SO MEAN?');
 
                 // Call the assertion callback
                 done();
@@ -191,7 +342,93 @@ describe('Job CRUD tests', function () {
       });
   });
 
-  it('should be able to get a list of jobs if not signed in', function (done) {
+  it('should be able to get a list of jobs if signed in', function (done) {
+    agent.post('/api/auth/signin')
+      .send(credentials)
+      .expect(200)
+      .end(function (signinErr, signinRes) {
+        // Handle signin error
+        if (signinErr) {
+          return done(signinErr);
+        }
+
+        // Get the userId
+        var userId = user.id;
+        var jobObj = new Job(job);
+        // Save a new job
+        agent.post('/api/jobs')
+          .send(jobObj)
+          .expect(200)
+          .end(function (jobSaveErr, jobSaveRes) {
+            // Handle job save error
+            if (jobSaveErr) {
+              return done(jobSaveErr);
+            }
+
+            // Delete an existing job
+            agent.get('/api/jobs')
+              .send(job)
+              .expect(200)
+              .end(function (jobDeleteErr, jobDeleteRes) {
+                // Handle job error error
+                if (jobDeleteErr) {
+                  return done(jobDeleteErr);
+                }
+
+                // Set assertions
+                jobDeleteRes.body.should.be.instanceof(Array).and.have.lengthOf(1);
+
+                // Call the assertion callback
+                done();
+              });
+          });
+      });
+  });
+
+  it('should be able to get a single job if signed in', function (done) {
+    agent.post('/api/auth/signin')
+      .send(credentials)
+      .expect(200)
+      .end(function (signinErr, signinRes) {
+        // Handle signin error
+        if (signinErr) {
+          return done(signinErr);
+        }
+
+        // Get the userId
+        var userId = user.id;
+        var jobObj = new Job(job);
+        // Save a new job
+        agent.post('/api/jobs')
+          .send(jobObj)
+          .expect(200)
+          .end(function (jobSaveErr, jobSaveRes) {
+            // Handle job save error
+            if (jobSaveErr) {
+              return done(jobSaveErr);
+            }
+
+            // Delete an existing job
+            agent.get('/api/jobs/' + jobSaveRes.body._id)
+              .send(job)
+              .expect(200)
+              .end(function (jobDeleteErr, jobDeleteRes) {
+                // Handle job error error
+                if (jobDeleteErr) {
+                  return done(jobDeleteErr);
+                }
+
+                // Set assertions
+                jobDeleteRes.body.should.be.instanceof(Object).and.have.property('title', job.title);
+
+                // Call the assertion callback
+                done();
+              });
+          });
+      });
+  });
+
+  it('should not be able to get a list of jobs if not signed in', function (done) {
     // Create new job model instance
     var jobObj = new Job(job);
 
@@ -199,9 +436,10 @@ describe('Job CRUD tests', function () {
     jobObj.save(function () {
       // Request jobs
       request(app).get('/api/jobs')
+        .expect(403)
         .end(function (req, res) {
           // Set assertion
-          res.body.should.be.instanceof(Array).and.have.lengthOf(1);
+          (res.body.message).should.match('User is not authorized');
 
           // Call the assertion callback
           done();
@@ -210,16 +448,17 @@ describe('Job CRUD tests', function () {
     });
   });
 
-  it('should be able to get a single job if not signed in', function (done) {
+  it('should not be able to get a single job if not signed in', function (done) {
     // Create new job model instance
     var jobObj = new Job(job);
 
     // Save the job
     jobObj.save(function () {
       request(app).get('/api/jobs/' + jobObj._id)
+        .expect(403)
         .end(function (req, res) {
           // Set assertion
-          res.body.should.be.instanceof(Object).and.have.property('title', job.title);
+          (res.body.message).should.match('User is not authorized');
 
           // Call the assertion callback
           done();

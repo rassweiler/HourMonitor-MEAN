@@ -5,18 +5,18 @@ var should = require('should'),
   path = require('path'),
   mongoose = require('mongoose'),
   User = mongoose.model('User'),
-  Article = mongoose.model('Article'),
+  Pay = mongoose.model('Pay'),
   express = require(path.resolve('./config/lib/express'));
 
 /**
  * Globals
  */
-var app, agent, credentials, user, article;
+var app, agent, credentials, user, pay;
 
 /**
- * Article routes tests
+ * Pay routes tests
  */
-describe('Article CRUD tests', function () {
+describe('Pay CRUD tests', function () {
 
   before(function (done) {
     // Get application
@@ -44,18 +44,20 @@ describe('Article CRUD tests', function () {
       provider: 'local'
     });
 
-    // Save a user to the test db and create new article
+    // Save a user to the test db and create new pay
     user.save(function () {
-      article = {
-        title: 'Article Title',
-        content: 'Article Content'
+      pay = {
+        title: 'Pay Title',
+        start: Date.now(),
+        end: Date.now(),
+        user: user
       };
 
       done();
     });
   });
 
-  it('should be able to save an article if logged in', function (done) {
+  it('should be able to save an pay if logged in', function (done) {
     agent.post('/api/auth/signin')
       .send(credentials)
       .expect(200)
@@ -68,30 +70,30 @@ describe('Article CRUD tests', function () {
         // Get the userId
         var userId = user.id;
 
-        // Save a new article
-        agent.post('/api/articles')
-          .send(article)
+        // Save a new pay
+        agent.post('/api/pays')
+          .send(pay)
           .expect(200)
-          .end(function (articleSaveErr, articleSaveRes) {
-            // Handle article save error
-            if (articleSaveErr) {
-              return done(articleSaveErr);
+          .end(function (paySaveErr, paySaveRes) {
+            // Handle pay save error
+            if (paySaveErr) {
+              return done(paySaveErr);
             }
 
-            // Get a list of articles
-            agent.get('/api/articles')
-              .end(function (articlesGetErr, articlesGetRes) {
-                // Handle article save error
-                if (articlesGetErr) {
-                  return done(articlesGetErr);
+            // Get a list of pays
+            agent.get('/api/pays')
+              .end(function (paysGetErr, paysGetRes) {
+                // Handle pay save error
+                if (paysGetErr) {
+                  return done(paysGetErr);
                 }
 
-                // Get articles list
-                var articles = articlesGetRes.body;
+                // Get pays list
+                var pays = paysGetRes.body;
 
                 // Set assertions
-                (articles[0].user._id).should.equal(userId);
-                (articles[0].title).should.match('Article Title');
+                (pays[0].user._id).should.equal(userId);
+                (pays[0].title).should.match('Pay Title');
 
                 // Call the assertion callback
                 done();
@@ -100,19 +102,19 @@ describe('Article CRUD tests', function () {
       });
   });
 
-  it('should not be able to save an article if not logged in', function (done) {
-    agent.post('/api/articles')
-      .send(article)
+  it('should not be able to save an pay if not logged in', function (done) {
+    agent.post('/api/pays')
+      .send(pay)
       .expect(403)
-      .end(function (articleSaveErr, articleSaveRes) {
+      .end(function (paySaveErr, paySaveRes) {
         // Call the assertion callback
-        done(articleSaveErr);
+        done(paySaveErr);
       });
   });
 
-  it('should not be able to save an article if no title is provided', function (done) {
+  it('should not be able to save an pay if no title is provided', function (done) {
     // Invalidate title field
-    article.title = '';
+    pay.title = '';
 
     agent.post('/api/auth/signin')
       .send(credentials)
@@ -126,21 +128,21 @@ describe('Article CRUD tests', function () {
         // Get the userId
         var userId = user.id;
 
-        // Save a new article
-        agent.post('/api/articles')
-          .send(article)
+        // Save a new pay
+        agent.post('/api/pays')
+          .send(pay)
           .expect(400)
-          .end(function (articleSaveErr, articleSaveRes) {
+          .end(function (paySaveErr, paySaveRes) {
             // Set message assertion
-            (articleSaveRes.body.message).should.match('Title cannot be blank');
+            (paySaveRes.body.message).should.match('Title cannot be blank');
 
-            // Handle article save error
-            done(articleSaveErr);
+            // Handle pay save error
+            done(paySaveErr);
           });
       });
   });
 
-  it('should be able to update an article if signed in', function (done) {
+  it('should be able to update an pay if signed in', function (done) {
     agent.post('/api/auth/signin')
       .send(credentials)
       .expect(200)
@@ -153,32 +155,32 @@ describe('Article CRUD tests', function () {
         // Get the userId
         var userId = user.id;
 
-        // Save a new article
-        agent.post('/api/articles')
-          .send(article)
+        // Save a new pay
+        agent.post('/api/pays')
+          .send(pay)
           .expect(200)
-          .end(function (articleSaveErr, articleSaveRes) {
-            // Handle article save error
-            if (articleSaveErr) {
-              return done(articleSaveErr);
+          .end(function (paySaveErr, paySaveRes) {
+            // Handle pay save error
+            if (paySaveErr) {
+              return done(paySaveErr);
             }
 
-            // Update article title
-            article.title = 'WHY YOU GOTTA BE SO MEAN?';
+            // Update pay title
+            pay.title = 'WHY YOU GOTTA BE SO MEAN?';
 
-            // Update an existing article
-            agent.put('/api/articles/' + articleSaveRes.body._id)
-              .send(article)
+            // Update an existing pay
+            agent.put('/api/pays/' + paySaveRes.body._id)
+              .send(pay)
               .expect(200)
-              .end(function (articleUpdateErr, articleUpdateRes) {
-                // Handle article update error
-                if (articleUpdateErr) {
-                  return done(articleUpdateErr);
+              .end(function (payUpdateErr, payUpdateRes) {
+                // Handle pay update error
+                if (payUpdateErr) {
+                  return done(payUpdateErr);
                 }
 
                 // Set assertions
-                (articleUpdateRes.body._id).should.equal(articleSaveRes.body._id);
-                (articleUpdateRes.body.title).should.match('WHY YOU GOTTA BE SO MEAN?');
+                (payUpdateRes.body._id).should.equal(paySaveRes.body._id);
+                (payUpdateRes.body.title).should.match('WHY YOU GOTTA BE SO MEAN?');
 
                 // Call the assertion callback
                 done();
@@ -187,67 +189,7 @@ describe('Article CRUD tests', function () {
       });
   });
 
-  it('should be able to get a list of articles if not signed in', function (done) {
-    // Create new article model instance
-    var articleObj = new Article(article);
-
-    // Save the article
-    articleObj.save(function () {
-      // Request articles
-      request(app).get('/api/articles')
-        .end(function (req, res) {
-          // Set assertion
-          res.body.should.be.instanceof(Array).and.have.lengthOf(1);
-
-          // Call the assertion callback
-          done();
-        });
-
-    });
-  });
-
-  it('should be able to get a single article if not signed in', function (done) {
-    // Create new article model instance
-    var articleObj = new Article(article);
-
-    // Save the article
-    articleObj.save(function () {
-      request(app).get('/api/articles/' + articleObj._id)
-        .end(function (req, res) {
-          // Set assertion
-          res.body.should.be.instanceof(Object).and.have.property('title', article.title);
-
-          // Call the assertion callback
-          done();
-        });
-    });
-  });
-
-  it('should return proper error for single article with an invalid Id, if not signed in', function (done) {
-    // test is not a valid mongoose Id
-    request(app).get('/api/articles/test')
-      .end(function (req, res) {
-        // Set assertion
-        res.body.should.be.instanceof(Object).and.have.property('message', 'Article is invalid');
-
-        // Call the assertion callback
-        done();
-      });
-  });
-
-  it('should return proper error for single article which doesnt exist, if not signed in', function (done) {
-    // This is a valid mongoose Id but a non-existent article
-    request(app).get('/api/articles/559e9cd815f80b4c256a8f41')
-      .end(function (req, res) {
-        // Set assertion
-        res.body.should.be.instanceof(Object).and.have.property('message', 'No article with that identifier has been found');
-
-        // Call the assertion callback
-        done();
-      });
-  });
-
-  it('should be able to delete an article if signed in', function (done) {
+  it('should be able to get a list of pays if signed in', function (done) {
     agent.post('/api/auth/signin')
       .send(credentials)
       .expect(200)
@@ -259,29 +201,29 @@ describe('Article CRUD tests', function () {
 
         // Get the userId
         var userId = user.id;
-
-        // Save a new article
-        agent.post('/api/articles')
-          .send(article)
+        var payObj = new Pay(pay);
+        // Save a new job
+        agent.post('/api/pays')
+          .send(payObj)
           .expect(200)
-          .end(function (articleSaveErr, articleSaveRes) {
-            // Handle article save error
-            if (articleSaveErr) {
-              return done(articleSaveErr);
+          .end(function (paySaveErr, paySaveRes) {
+            // Handle job save error
+            if (paySaveErr) {
+              return done(paySaveErr);
             }
 
-            // Delete an existing article
-            agent.delete('/api/articles/' + articleSaveRes.body._id)
-              .send(article)
+            // Delete an existing job
+            agent.get('/api/pays')
+              .send(pay)
               .expect(200)
-              .end(function (articleDeleteErr, articleDeleteRes) {
-                // Handle article error error
-                if (articleDeleteErr) {
-                  return done(articleDeleteErr);
+              .end(function (payDeleteErr, payDeleteRes) {
+                // Handle job error error
+                if (payDeleteErr) {
+                  return done(payDeleteErr);
                 }
 
                 // Set assertions
-                (articleDeleteRes.body._id).should.equal(articleSaveRes.body._id);
+                payDeleteRes.body.should.be.instanceof(Array).and.have.lengthOf(1);
 
                 // Call the assertion callback
                 done();
@@ -290,24 +232,173 @@ describe('Article CRUD tests', function () {
       });
   });
 
-  it('should not be able to delete an article if not signed in', function (done) {
-    // Set article user
-    article.user = user;
 
-    // Create new article model instance
-    var articleObj = new Article(article);
+  it('should be able to get a single pay if signed in', function (done) {
+    agent.post('/api/auth/signin')
+      .send(credentials)
+      .expect(200)
+      .end(function (signinErr, signinRes) {
+        // Handle signin error
+        if (signinErr) {
+          return done(signinErr);
+        }
 
-    // Save the article
-    articleObj.save(function () {
-      // Try deleting article
-      request(app).delete('/api/articles/' + articleObj._id)
+        // Get the userId
+        var userId = user.id;
+        var payObj = new Pay(pay);
+        // Save a new job
+        agent.post('/api/pays')
+          .send(payObj)
+          .expect(200)
+          .end(function (paySaveErr, paySaveRes) {
+            // Handle job save error
+            if (paySaveErr) {
+              return done(paySaveErr);
+            }
+
+            // Delete an existing job
+            agent.get('/api/pays/' + paySaveRes.body._id)
+              .send(pay)
+              .expect(200)
+              .end(function (payDeleteErr, payDeleteRes) {
+                // Handle job error error
+                if (payDeleteErr) {
+                  return done(payDeleteErr);
+                }
+
+                // Set assertions
+                payDeleteRes.body.should.be.instanceof(Object).and.have.property('title', pay.title);
+
+                // Call the assertion callback
+                done();
+              });
+          });
+      });
+  });
+
+  it('should not be able to get a list of pays if not signed in', function (done) {
+    // Create new pay model instance
+    var payObj = new Pay(pay);
+
+    // Save the pay
+    payObj.save(function () {
+      // Request pays
+      request(app).get('/api/pays')
         .expect(403)
-        .end(function (articleDeleteErr, articleDeleteRes) {
-          // Set message assertion
-          (articleDeleteRes.body.message).should.match('User is not authorized');
+        .end(function (req, res) {
+          // Set assertion
+          (res.body.message).should.match('User is not authorized');
 
-          // Handle article error error
-          done(articleDeleteErr);
+          // Call the assertion callback
+          done();
+        });
+
+    });
+  });
+
+  it('should not be able to get a single pay if not signed in', function (done) {
+    // Create new pay model instance
+    var payObj = new Pay(pay);
+
+    // Save the pay
+    payObj.save(function () {
+      request(app).get('/api/pays/' + payObj._id)
+        .expect(403)
+        .end(function (req, res) {
+          // Set assertion
+          (res.body.message).should.match('User is not authorized');
+
+          // Call the assertion callback
+          done();
+        });
+    });
+  });
+
+  it('should return proper error for single pay with an invalid Id, if not signed in', function (done) {
+    // test is not a valid mongoose Id
+    request(app).get('/api/pays/test')
+      .end(function (req, res) {
+        // Set assertion
+        res.body.should.be.instanceof(Object).and.have.property('message', 'Pay is invalid');
+
+        // Call the assertion callback
+        done();
+      });
+  });
+
+  it('should return proper error for single pay which doesnt exist, if not signed in', function (done) {
+    // This is a valid mongoose Id but a non-existent pay
+    request(app).get('/api/pays/559e9cd815f80b4c256a8f41')
+      .end(function (req, res) {
+        // Set assertion
+        res.body.should.be.instanceof(Object).and.have.property('message', 'No pay with that identifier has been found');
+
+        // Call the assertion callback
+        done();
+      });
+  });
+
+  it('should be able to delete an pay if signed in', function (done) {
+    agent.post('/api/auth/signin')
+      .send(credentials)
+      .expect(200)
+      .end(function (signinErr, signinRes) {
+        // Handle signin error
+        if (signinErr) {
+          return done(signinErr);
+        }
+
+        // Get the userId
+        var userId = user.id;
+
+        // Save a new pay
+        agent.post('/api/pays')
+          .send(pay)
+          .expect(200)
+          .end(function (paySaveErr, paySaveRes) {
+            // Handle pay save error
+            if (paySaveErr) {
+              return done(paySaveErr);
+            }
+
+            // Delete an existing pay
+            agent.delete('/api/pays/' + paySaveRes.body._id)
+              .send(pay)
+              .expect(200)
+              .end(function (payDeleteErr, payDeleteRes) {
+                // Handle pay error error
+                if (payDeleteErr) {
+                  return done(payDeleteErr);
+                }
+
+                // Set assertions
+                (payDeleteRes.body._id).should.equal(paySaveRes.body._id);
+
+                // Call the assertion callback
+                done();
+              });
+          });
+      });
+  });
+
+  it('should not be able to delete an pay if not signed in', function (done) {
+    // Set pay user
+    pay.user = user;
+
+    // Create new pay model instance
+    var payObj = new Pay(pay);
+
+    // Save the pay
+    payObj.save(function () {
+      // Try deleting pay
+      request(app).delete('/api/pays/' + payObj._id)
+        .expect(403)
+        .end(function (payDeleteErr, payDeleteRes) {
+          // Set message assertion
+          (payDeleteRes.body.message).should.match('User is not authorized');
+
+          // Handle pay error error
+          done(payDeleteErr);
         });
 
     });
@@ -315,7 +406,7 @@ describe('Article CRUD tests', function () {
 
   afterEach(function (done) {
     User.remove().exec(function () {
-      Article.remove().exec(done);
+      Pay.remove().exec(done);
     });
   });
 });

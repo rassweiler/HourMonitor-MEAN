@@ -11,7 +11,9 @@
       $location,
       Authentication,
       Jobs,
-      mockJob;
+      Pays,
+      mockJob,
+      mockPay;
 
     // The $resource service augments the response object with methods for updating and deleting the resource.
     // If we were to use the standard toEqual matcher, our tests would fail because the test values would not match
@@ -38,7 +40,7 @@
     // The injector ignores leading and trailing underscores here (i.e. _$httpBackend_).
     // This allows us to inject a service but then attach it to a variable
     // with the same name as the service.
-    beforeEach(inject(function ($controller, $rootScope, _$location_, _$stateParams_, _$httpBackend_, _Authentication_, _Jobs_) {
+    beforeEach(inject(function ($controller, $rootScope, _$location_, _$stateParams_, _$httpBackend_, _Authentication_, _Jobs_, _Pays_) {
       // Set a new global scope
       scope = $rootScope.$new();
 
@@ -48,20 +50,25 @@
       $location = _$location_;
       Authentication = _Authentication_;
       Jobs = _Jobs_;
-
+      var date = new Date();
+      date.setHours(0,0,0,0);
       // create mock job
       mockJob = new Jobs({
         _id: '525a8422f6d0f87f0e407a33',
-        title: 'An Job about MEAN',
+        title: 'An Job Mockup',
         company: 'Razorsnatch',
-        description: 'MEAN rocks!',
-        rate:20
+        description: 'My butthole is poopy',
+        rate:20,
+        created: date,
+        paydate: date,
+        period: 14
       });
 
       // Mock logged in user
       Authentication.user = {
         roles: ['user']
       };
+      //mockJob.user = Authentication.user;
 
       // Initialize the Jobs controller.
       JobsController = $controller('JobsController', {
@@ -103,17 +110,24 @@
       var sampleJobPostData;
 
       beforeEach(function () {
-        // Create a sample job object
+        // Create a sample job object (Expected Values)
+        var date = new Date();
+        date.setHours(0,0,0,0);
         sampleJobPostData = new Jobs({
-          title: 'An Job about MEAN',
+          title: 'An Job Mockup',
           company: 'Razorsnatch',
-          description: 'MEAN rocks!',
-          rate:20
+          description: 'My butthole is poopy!',
+          rate:20,
+          paydate: date,
+          period: 14
         });
-
-        // Fixture mock form input values
-        scope.title = 'An Job about MEAN';
-        scope.description = 'MEAN rocks!';
+        // Fixture mock form input values (Got values)
+        scope.title = 'An Job Mockup';
+        scope.company = 'Razorsnatch';
+        scope.description = 'My butthole is poopy!';
+        scope.rate = 20;
+        scope.paydate = date;
+        scope.period = 14;
 
         spyOn($location, 'path');
       });

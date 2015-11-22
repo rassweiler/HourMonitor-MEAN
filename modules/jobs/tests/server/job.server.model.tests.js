@@ -52,8 +52,54 @@ describe('Job Model Unit Tests:', function () {
       });
     });
 
-    it('should be able to show an error when try to save without title', function (done) {
+    it('should be able to show an error when trying to save without title', function (done) {
       job.title = '';
+
+      return job.save(function (err) {
+        should.exist(err);
+        done();
+      });
+    });
+
+    it('should be able to show an error when trying to save without company', function (done) {
+      job.company = '';
+
+      return job.save(function (err) {
+        should.exist(err);
+        done();
+      });
+    });
+
+    it('should be able to show an error when trying to save without rate', function (done) {
+      job.rate = null;
+
+      return job.save(function (err) {
+        should.exist(err);
+        done();
+      });
+    });
+
+    it('should be able to show an error when trying to save without period', function (done) {
+      job.period = null;
+
+      return job.save(function (err) {
+        should.exist(err);
+        done();
+      });
+    });
+
+    it('should be able to show an error when trying to save without paydate', function (done) {
+      job.paydate = null;
+
+      return job.save(function (err) {
+        should.exist(err);
+        done();
+      });
+    });
+
+    it('should be able to show an error when trying to save with paydate less than current date', function (done) {
+      var date = new Date(new Date().setDate(new Date().getDate()-2));
+      job.paydate = date;
 
       return job.save(function (err) {
         should.exist(err);

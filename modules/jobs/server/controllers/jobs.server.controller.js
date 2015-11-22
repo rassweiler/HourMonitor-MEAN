@@ -16,32 +16,34 @@ exports.create = function (req, res) {
   var pay = new Pay();
   var job = new Job(req.body);
   job.user = req.user;
-  var payday = job.paydate.getDay();
-  var lastDay = job.paydate - ((payday+1)*24*60*60*1000);
-  var firstDay = lastDay - ((job.period-1)*24*60*60*1000);
-  var date = new Date();
-  var day = date.getDate();
-  var month = date.getMonth()+1;
-  var year = date.getFullYear();
-  pay.title=''+req.body.title+year+'-'+month+'-'+day;
-  job.pay=pay.id;
-  pay.job = job;
-  pay.start = firstDay;
-  pay.end = lastDay;
-  pay.user = req.user;
+  if(job.paydate){
+    var payday = job.paydate.getDay();
+    var lastDay = job.paydate - ((payday+1)*24*60*60*1000);
+    var firstDay = lastDay - ((job.period-1)*24*60*60*1000);
+    var date = new Date();
+    var day = date.getDate();
+    var month = date.getMonth()+1;
+    var year = date.getFullYear();
+    pay.title=''+req.body.title+year+'-'+month+'-'+day;
+    job.pay=pay.id;
+    pay.job = job;
+    pay.start = firstDay;
+    pay.end = lastDay;
+    pay.user = req.user;
+  }
   pay.save(function(err) {
-    console.log(pay);
+    //console.log(pay);
     if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
+      //return res.status(400).send({
+      //  message: errorHandler.getErrorMessage(err)
+      //});
     }else{
       
     }
   });
   job.payfiles.push(pay);
   job.save(function (err) {
-    console.log(job);
+    //console.log(job);
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
