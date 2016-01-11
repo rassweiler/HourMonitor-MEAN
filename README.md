@@ -1,8 +1,8 @@
-[![HourMonitor Logo](http://kylerassweiler.com/media/img/HourMonitor/logo.png)](http://hourmonitor.azurewebsites.net)
+[![HourMonitor Logo](http://kylerassweiler.com/media/img/HourMonitor/logo.png)](http://hourmonitor.kylerassweiler.ca)
 
 [![Build Status](https://travis-ci.org/rassweiler/HourMonitor-MEAN.svg?branch=master)](https://travis-ci.org/rassweiler/HourMonitor-MEAN)
 
-HourMonitor is a simple web application for tracking hours worked, designed to be mobile friendly and multiplatform. [Try it out!](http://hourmonitor.azurewebsites.net/#!/)
+HourMonitor is a simple web application for tracking hours worked, designed to be mobile friendly and multiplatform. [Try it out!](http://hourmonitor.kylerassweiler.ca) **NOTE: This is a DEMO, no ssl is setup**
 
 ## Prerequisites
 Make sure you have installed all these prerequisites on your development machine.
